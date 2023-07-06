@@ -7,5 +7,5 @@ export default defineConfig({
   server: {
     open: true,
   },
-  base: "https://atrokarvinen.github.io/autosaved-form/",
+  base: "/autosaved-form",
 });
