@@ -2,7 +2,8 @@ import { Button, Stack, TextField } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { ProgressIcon } from "../core/progressIcon";
 import { useAutosave } from "../core/useAutosave";
-import { PersonInfo } from "./personInfo";
+import { usePromptUnsavedChanges } from "../core/usePromptUnsavedChanges";
+import { PersonInfo, emptyValues } from "./personInfo";
 
 type PersonInfoFormProps = {
   defaultValues?: PersonInfo;
@@ -11,10 +12,11 @@ type PersonInfoFormProps = {
 
 const PersonInfoForm = ({ defaultValues, onSuccess }: PersonInfoFormProps) => {
   const methods = useForm<PersonInfo>({
-    defaultValues,
+    defaultValues: defaultValues ?? emptyValues,
   });
   const { register, handleSubmit } = methods;
   const { saving, clearSavedData } = useAutosave({ ...methods });
+  usePromptUnsavedChanges({ isDirty: methods.formState.isDirty });
 
   const onSubmit = (data: PersonInfo) => {
     console.log("values submitted:", data);

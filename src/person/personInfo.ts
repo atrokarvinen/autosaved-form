@@ -3,3 +3,9 @@ export type PersonInfo = {
   age: number;
   address: string;
 };
+
+export const emptyValues: PersonInfo = {
+  address: "",
+  name: "",
+  age: 0,
+};

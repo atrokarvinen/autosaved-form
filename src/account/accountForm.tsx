@@ -2,7 +2,8 @@ import { Button, Stack, TextField } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { ProgressIcon } from "../core/progressIcon";
 import { useAutosave } from "../core/useAutosave";
-import { Account } from "./account";
+import { usePromptUnsavedChanges } from "../core/usePromptUnsavedChanges";
+import { Account, emptyValues } from "./account";
 
 type AccountFormProps = {
   defaultValues?: Account;
@@ -11,10 +12,11 @@ type AccountFormProps = {
 
 export const AccountForm = ({ defaultValues, onSuccess }: AccountFormProps) => {
   const methods = useForm<Account>({
-    defaultValues,
+    defaultValues: defaultValues ?? emptyValues,
   });
   const { register, handleSubmit } = methods;
   const { saving, clearSavedData } = useAutosave({ ...methods });
+  usePromptUnsavedChanges({ isDirty: methods.formState.isDirty });
 
   const onSubmit = (data: Account) => {
     console.log("values submitted:", data);
