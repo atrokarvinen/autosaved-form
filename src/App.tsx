@@ -1,11 +1,5 @@
 import { Box, Tab, Tabs, Typography } from "@mui/material";
-import {
-  Link,
-  Route,
-  Routes,
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
+import { Link, Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 import { AccountForm } from "./account/accountForm";
 import LocalStorageBackupProvider from "./core/localStorageBackupProvider";
@@ -14,9 +8,24 @@ import PersonInfoForm from "./person/personInfoForm";
 
 function App() {
   const location = useLocation();
-  const navigate = useNavigate();
 
   const tabValue = findTabIndex(location.pathname);
+
+  const PersonTab = () => {
+    return (
+      <LocalStorageBackupProvider storeKey="PersonInfoForm">
+        <PersonInfoForm />
+      </LocalStorageBackupProvider>
+    );
+  };
+
+  const AccountTab = () => {
+    return (
+      <LocalStorageBackupProvider storeKey="AccountForm">
+        <AccountForm />
+      </LocalStorageBackupProvider>
+    );
+  };
 
   return (
     <Box>
@@ -27,22 +36,8 @@ function App() {
       </Tabs>
       <Routes>
         <Route path="/" element={<Typography variant="h1">Home</Typography>} />
-        <Route
-          path="/person"
-          element={
-            <LocalStorageBackupProvider storeKey="PersonInfoForm">
-              <PersonInfoForm onSuccess={() => navigate("/")} />
-            </LocalStorageBackupProvider>
-          }
-        />
-        <Route
-          path="/account"
-          element={
-            <LocalStorageBackupProvider storeKey="AccountForm">
-              <AccountForm onSuccess={() => navigate("/")} />
-            </LocalStorageBackupProvider>
-          }
-        />
+        <Route path="/person" element={<PersonTab />} />
+        <Route path="/account" element={<AccountTab />} />
       </Routes>
     </Box>
   );
