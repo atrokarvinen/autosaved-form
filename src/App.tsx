@@ -1,30 +1,49 @@
 import { Box, Tab, Tabs, Typography } from "@mui/material";
-import { useState } from "react";
+import {
+  Link,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import "./App.css";
 import { AccountForm } from "./account/accountForm";
 import LocalStorageBackupProvider from "./core/localStorageBackupProvider";
+import { findTabIndex, tabs } from "./core/tabs";
 import PersonInfoForm from "./person/personInfoForm";
 
 function App() {
-  const [tabValue, setTabValue] = useState(0);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const tabValue = findTabIndex(location.pathname);
+
   return (
     <Box>
-      <Tabs value={tabValue} onChange={(_, tabIndex) => setTabValue(tabIndex)}>
-        <Tab label="Home" />
-        <Tab label="Person info" />
-        <Tab label="Account info" />
+      <Tabs value={tabValue}>
+        {tabs.map((tab) => (
+          <Tab key={tab.label} component={Link} label={tab.label} to={tab.to} />
+        ))}
       </Tabs>
-      {tabValue === 0 && <Typography variant="h1">Home</Typography>}
-      {tabValue === 1 && (
-        <LocalStorageBackupProvider storeKey="PersonInfoForm">
-          <PersonInfoForm onSuccess={() => setTabValue(0)} />
-        </LocalStorageBackupProvider>
-      )}
-      {tabValue === 2 && (
-        <LocalStorageBackupProvider storeKey="AccountForm">
-          <AccountForm onSuccess={() => setTabValue(0)} />
-        </LocalStorageBackupProvider>
-      )}
+      <Routes>
+        <Route path="/" element={<Typography variant="h1">Home</Typography>} />
+        <Route
+          path="/person"
+          element={
+            <LocalStorageBackupProvider storeKey="PersonInfoForm">
+              <PersonInfoForm onSuccess={() => navigate("/")} />
+            </LocalStorageBackupProvider>
+          }
+        />
+        <Route
+          path="/account"
+          element={
+            <LocalStorageBackupProvider storeKey="AccountForm">
+              <AccountForm onSuccess={() => navigate("/")} />
+            </LocalStorageBackupProvider>
+          }
+        />
+      </Routes>
     </Box>
   );
 }
